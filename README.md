@@ -50,31 +50,31 @@ This project introduces a **Hybrid Multi-Agent Architecture** engineered for **Z
 ```mermaid
 graph TD
     %% INGESTION
-    A[Live IoT Network Telemetry] --> O{Central Orchestrator}
+    A["Live IoT Network Telemetry"] --> O{"Central Orchestrator"}
     
     %% HIGH AVAILABILITY SUBSYSTEM
     subgraph "High Availability Subsystem (Fault Tolerance)"
-        O -- "Unseen Schema (Cold Start)" --> N[Normalizer Agent / LLM]
-        N -- "On-the-fly Semantic Mapping" --> S_Base[Sentinel Base (Universal Fallback)]
-        O -. "Spawn Async Thread" .-> ET[Background Model Retraining]
+        O -- "Unseen Schema (Cold Start)" --> N["Normalizer Agent / LLM"]
+        N -- "On-the-fly Semantic Mapping" --> S_Base["Sentinel Base (Universal Fallback)"]
+        O -. "Spawn Async Thread" .-> ET["Background Model Retraining"]
         ET -. "Transparent Hot-Swap" .-> S_Expert
     end
 
     %% DETECTION SUBSYSTEM (TIER 1)
     subgraph "Tier 1: Ultra-Fast Real-Time Detection (XGBoost)"
-        O -- "Known Schema" --> S_Expert[Expert Sentinel Agent]
-        S_Base --> Eval{Is Attack / Anomaly?}
+        O -- "Known Schema" --> S_Expert["Expert Sentinel Agent"]
+        S_Base --> Eval{"Is Attack / Anomaly?"}
         S_Expert --> Eval
     end
     
-    Eval -- "Legitimate Traffic" --> Fin[Allowed Traffic - Flow Complete]
+    Eval -- "Legitimate Traffic" --> Fin["Allowed Traffic - Flow Complete"]
     
     %% REASONING SUBSYSTEM (TIER 2)
     subgraph "Tier 2: Cognitive Reasoning & Incident Response (LLM + RAG)"
-        Eval -- "Attack Detected" --> Ana[Analyst Agent (Llama 3.3 70B)]
-        Ana -- "Context & Severity (MITRE ATT&CK)" --> R[Responder Agent (RAG)]
-        KB[(MITRE CAPEC Knowledge Base)] -. "Vector Search (FAISS)" .-> R
-        R --> Rep[Comprehensive Incident Report]
+        Eval -- "Attack Detected" --> Ana["Analyst Agent (Llama 3.3 70B)"]
+        Ana -- "Context & Severity (MITRE ATT&CK)" --> R["Responder Agent (RAG)"]
+        KB[("MITRE CAPEC Knowledge Base")] -. "Vector Search (FAISS)" .-> R
+        R --> Rep["Comprehensive Incident Report"]
     end
 
     %% VISUAL STYLES
