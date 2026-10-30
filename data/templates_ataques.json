@@ -1,0 +1,59 @@
+{
+  "🟢 Normal (Sensor IoT MQTT)": {
+    "timestamp": "2026-04-30T10:15:00Z",
+    "device_type": "temperature_sensor",
+    "protocol": "mqtt",
+    "topic": "building/zone1/room4/temperature",
+    "payload_len": 45,
+    "qos": 1,
+    "tcp_flags": "ACK",
+    "src_ip": "192.168.10.50",
+    "dst_ip": "192.168.10.1",
+    "src_port": 45123,
+    "dst_port": 1883
+  },
+  "🔴 Ataque DDoS (UDP Flood)": {
+    "timestamp": "2026-04-30T10:16:22Z",
+    "protocol": "udp",
+    "src_ip": "45.33.22.11",
+    "dst_ip": "10.0.0.5",
+    "src_port": 54321,
+    "dst_port": 80,
+    "packets_sent": 150000,
+    "bytes_sent": 8500000,
+    "duration_sec": 1.2
+  },
+  "🔴 SQL Injection (HTTP Log)": {
+    "timestamp": "2026-04-30T10:17:05Z",
+    "client_ip": "203.0.113.45",
+    "method": "GET",
+    "url": "/login.php?user=admin' OR '1'='1' --",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) sqlmap/1.5",
+    "http_status": 500,
+    "response_size_bytes": 1205
+  },
+  "🟠 Escaneo de Puertos (Zeek Conn Log)": {
+    "ts": 1714465000.555,
+    "id.orig_h": "192.168.1.200",
+    "id.resp_h": "10.0.0.15",
+    "id.resp_p": 22,
+    "proto": "tcp",
+    "conn_state": "REJ",
+    "history": "Sr",
+    "orig_pkts": 1,
+    "orig_ip_bytes": 60,
+    "resp_pkts": 1,
+    "resp_ip_bytes": 40
+  },
+  "🔴 Infección Malware (Botnet C&C)": {
+    "timestamp": "2026-04-30T10:20:11Z",
+    "src_ip": "10.0.0.100",
+    "dst_ip": "185.15.55.22",
+    "dst_port": 6667,
+    "protocol": "tcp",
+    "tcp_flags": "SYN",
+    "payload_preview": "USER bot_12345\r\nNICK bot_12345\r\n",
+    "packets_exchanged": 15,
+    "bytes_exchanged": 1250
+  }
+}

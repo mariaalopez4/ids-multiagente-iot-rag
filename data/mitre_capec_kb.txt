@@ -1,0 +1,134 @@
+BASE DE CONOCIMIENTO EXTENDIDA DE MITIGACIONES Y RESPUESTA
+========================================================================================
+
+1. ATAQUE: DDoS_UDP
+   - CAPEC ID: CAPEC-486 (UDP Flood)
+   - Descripción Técnica: El atacante inunda el objetivo con paquetes UDP (User Datagram Protocol) a puertos aleatorios. Esto obliga al sistema víctima a verificar si hay aplicaciones escuchando y responder con paquetes ICMP "Destination Unreachable", agotando sus recursos.
+   - Impacto IoT: Dispositivos de baja potencia pueden bloquearse inmediatamente. Batería drenada en sensores wireless.
+   - Mitigación Nivel Red:
+     - Implementar "Rate Limiting" en el firewall perimetral para tráfico UDP.
+     - Bloquear tráfico UDP entrante excepto DNS (53), NTP (123) y servicios IoT específicos.
+   - Mitigación Nivel Dispositivo:
+     - Deshabilitar servicios UDP no esenciales.
+   - Comando Sugerido (Linux/IPTables): `iptables -A INPUT -p udp -m limit --limit 10/s -j ACCEPT`
+
+2. ATAQUE: DDoS_ICMP
+   - CAPEC ID: CAPEC-487 (ICMP Flood / Ping Flood)
+   - Descripción Técnica: Envío masivo de paquetes ICMP Echo Request (Ping). El objetivo intenta responder a cada uno con Echo Reply, saturando el ancho de banda saliente y la CPU.
+   - Impacto IoT: Latencia extrema en la red de control. Pérdida de conectividad con el hub/gateway.
+   - Mitigación:
+     - Deshabilitar respuestas ICMP en el gateway IoT.
+     - Configurar reglas para descartar paquetes ICMP que superen un umbral.
+   - Mitigación Permanente: Bloquear ICMP totalmente si no es necesario para diagnóstico.
+
+3. ATAQUE: SQL_injection
+   - CAPEC ID: CAPEC-66 (SQL Injection)
+   - Descripción Técnica: El atacante inserta o "inyecta" una consulta SQL parcial a través de los datos de entrada del cliente a la aplicación. Una inyección SQL exitosa puede leer datos sensibles de la base de datos, modificar datos (Insert/Update/Delete), ejecutar operaciones administrativas (como shutdown del DBMS).
+   - Impacto IoT: Robo de credenciales de usuarios, manipulación de registros de sensores, acceso total al backend.
+   - Mitigación Crítica:
+     - NUNCA concatenar strings para crear consultas SQL.
+     - USAR OBLIGATORIAMENTE "Prepared Statements" (Consultas Parametrizadas).
+     - Validación estricta de tipos de datos de entrada (Input Validation).
+     - Principio de Mínimo Privilegio: La cuenta de BD de la app IoT solo debe tener permisos SELECT/INSERT necesarios.
+
+4. ATAQUE: DDoS_TCP
+   - CAPEC ID: CAPEC-482 (TCP Flood / SYN Flood)
+   - Descripción Técnica: El atacante envía una sucesión de solicitudes SYN al sistema objetivo en un intento de consumir suficientes recursos del servidor para que el sistema no responda al tráfico legítimo. Se dejan conexiones "semi-abiertas".
+   - Impacto IoT: El servidor de comando y control deja de aceptar conexiones de sensores legítimos.
+   - Mitigación:
+     - Habilitar "SYN Cookies" en el servidor.
+     - Configurar timeout de conexión reducido.
+     - Firewall: Limitar el número de nuevas conexiones por IP origen por segundo.
+
+5. ATAQUE: Vulnerability_scanner
+   - CAPEC ID: CAPEC-310 (Scanning for Vulnerable Software)
+   - Descripción Técnica: Sondeo automatizado usando herramientas (Nmap, Nessus, OpenVAS) para encontrar versiones de software desactualizadas o configuraciones por defecto inseguras.
+   - Impacto IoT: Precursor de un ataque dirigido. Revela modelo de dispositivo y versión de firmware.
+   - Mitigación:
+     - Mantener firmware actualizado (Patch Management automatizado).
+     - Usar IPS (Intrusion Prevention System) para detectar patrones de escaneo secuencial y bloquear la IP origen automáticamente (Ban IP).
+     - Ofuscación: Cambiar banners por defecto de servicios (SSH, HTTP).
+
+6. ATAQUE: Password
+   - CAPEC ID: CAPEC-49 (Password Brute Force) y CAPEC-70 (Typosquatting)
+   - Descripción Técnica: Intento de obtener acceso probando sistemáticamente todas las combinaciones posibles de contraseñas o usando diccionarios de claves comunes (admin/admin).
+   - Impacto IoT: Compromiso total del dispositivo. Incorporación a una botnet (ej: Mirai).
+   - Mitigación:
+     - Implementar bloqueo de cuenta progresivo tras 3 intentos fallidos (Account Lockout).
+     - Eliminar cuentas por defecto (root/admin, pi/raspberry).
+     - Forzar autenticación basada en claves SSH (PKI) en lugar de contraseñas.
+     - Implementar Autenticación Multifactor (MFA) si es posible.
+
+7. ATAQUE: DDoS_HTTP
+   - CAPEC ID: CAPEC-488 (HTTP Flood)
+   - Descripción Técnica: Peticiones HTTP GET o POST aparentemente legítimas enviadas a alta frecuencia para agotar los recursos del servidor web (Apache, Nginx) o lógica de aplicación.
+   - Impacto IoT: Caída del panel de control web o API REST de los dispositivos.
+   - Mitigación:
+     - Web Application Firewall (WAF).
+     - Implementar desafíos (Captchas) o JavaScript challenges (no viable para tráfico M2M, usar Rate Limiting por API Key).
+     - Usar CDNs o balanceadores de carga para absorber el tráfico.
+
+8. ATAQUE: Uploading
+   - CAPEC ID: CAPEC-242 (Malicious Upload)
+   - Descripción Técnica: El atacante sube un archivo que contiene código ejecutable malicioso (webshell, malware) disfrazado de archivo legítimo (imagen, log).
+   - Impacto IoT: Ejecución remota de código (RCE).
+   - Mitigación:
+     - Validar contenido del archivo, no solo la extensión.
+     - Renombrar archivos subidos aleatoriamente.
+     - Almacenar archivos fuera del directorio raíz del servidor web (root web directory).
+     - Deshabilitar permisos de ejecución en directorios de subida.
+
+9. ATAQUE: Backdoor
+   - CAPEC ID: CAPEC-523 (Malicious Software Implanted)
+   - Descripción Técnica: Método oculto para eludir la autenticación normal y obtener acceso remoto al dispositivo. A menudo instalado tras un exploit inicial.
+   - Impacto IoT: Persistencia del atacante. Robo silencioso de datos a largo plazo.
+   - Mitigación:
+     - File Integrity Monitoring (FIM): Alertar si cambian binarios del sistema (/bin, /sbin).
+     - Network Segmentation: El dispositivo IoT no debería poder iniciar conexiones arbitrarias a internet (solo a su servidor Cloud específico).
+     - Revisión periódica de puertos abiertos y usuarios del sistema.
+
+10. ATAQUE: Port_Scanning
+    - CAPEC ID: CAPEC-300 (Port Scanning)
+    - Descripción Técnica: Técnica de reconocimiento para descubrir servicios activos escuchando en un host.
+    - Mitigación:
+      - Principio de Mínima Exposición: Cerrar todos los puertos no esenciales.
+      - Port Knocking (avanzado, para ocultar SSH).
+      - Firewall: Rechazar (DROP/REJECT) paquetes a puertos cerrados para ralentizar el escaneo.
+
+11. ATAQUE: XSS
+    - CAPEC ID: CAPEC-63 (Cross Site Scripting)
+    - Descripción Técnica: Inyección de scripts maliciosos en páginas web vistas por otros usuarios.
+    - Impacto IoT: Robo de cookies de sesión del administrador del panel IoT.
+    - Mitigación:
+      - Content Security Policy (CSP).
+      - Output Encoding: Escapar caracteres especiales en la salida HTML.
+      - Input Sanitization.
+
+12. ATAQUE: Ransomware
+    - CAPEC ID: CAPEC-542 (Targeted Malware)
+    - Descripción Técnica: Malware que cifra los datos del usuario y exige pago para desbloquearlos. En IoT puede "brickear" el dispositivo.
+    - Mitigación:
+      - Estrategia de Backup 3-2-1.
+      - Segmentación de red (Zero Trust) para evitar propagación lateral.
+      - Deshabilitar servicios de administración remota (SMB, RDP) expuestos a internet.
+
+13. ATAQUE: Fingerprinting
+    - CAPEC ID: CAPEC-224 (Fingerprinting)
+    - Descripción Técnica: Recolección de información técnica (OS, versión de servicios) analizando respuestas a paquetes específicos.
+    - Mitigación:
+      - Modificar configuraciones por defecto para ocultar la versión del servidor (ej: `ServerTokens Prod` en Apache).
+      - No exponer mensajes de error detallados (Verbose Error Messages).
+
+14. ATAQUE: MITM
+    - CAPEC ID: CAPEC-94 (Man-In-The-Middle)
+    - Descripción Técnica: El atacante se sitúa entre dos partes de la comunicación, interceptando y/o modificando los mensajes. (Ej: ARP Spoofing en LAN).
+    - Impacto IoT: Robo de datos de sensores, inyección de comandos falsos.
+    - Mitigación:
+      - Cifrado Extremo a Extremo obligatorio (TuLS/SSL).
+      - Uso de VPNs para túneles seguros.
+      - Validación de certificados estricta (Certificate Pinning) en el cliente IoT.
+      - Monitorización de tablas ARP estáticas en redes críticas.
+
+15. ATAQUE: Normal
+    - Descripción: Tráfico legítimo operativo.
+    - Acción: Continuar monitorización y establecer línea base de comportamiento (Baselining).

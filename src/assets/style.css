@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+.stApp {
+    background: #0d1117;
+    color: #e6edf3;
+}
+
+section[data-testid="stSidebar"] {
+    background: #161b22;
+    border-right: 1px solid #30363d;
+}
+
+.kpi-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 18px 22px;
+    text-align: center;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #58a6ff;
+    margin: 6px 0 2px;
+    line-height: 1;
+}
+
+.kpi-label {
+    font-size: 0.78rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.agent-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%;
+}
+
+.agent-card h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+}
+
+.badge-critical {
+    display: inline-block;
+    background: #3d1f1f;
+    color: #f85149;
+    border: 1px solid #f8514933;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-ok {
+    display: inline-block;
+    background: #1a2f23;
+    color: #3fb950;
+    border: 1px solid #3fb95033;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-warning {
+    display: inline-block;
+    background: #2f2518;
+    color: #d29922;
+    border: 1px solid #d2992233;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.threat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f85149;
+    margin: 8px 0;
+}
+
+.ok-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #3fb950;
+    margin: 8px 0;
+}
+
+.section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #21262d;
+    margin: 16px 0;
+}
+
+/* Ocultar elementos de branding de Streamlit */
+#MainMenu, footer, header { visibility: hidden; }
+
+.stButton > button {
+    background: #1f6feb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 10px 20px;
+    width: 100%;
+    transition: background 0.2s;
+}
+
+.stButton > button:hover {
+    background: #388bfd;
+    border: none;
+}
+
+.stSelectbox label, .stSlider label {
+    color: #8b949e !important;
+    font-size: 0.82rem !important;
+}
+
+.log-block {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: #7ee787;
+    overflow-x: auto;
+    max-height: 160px;
+    overflow-y: auto;
+}

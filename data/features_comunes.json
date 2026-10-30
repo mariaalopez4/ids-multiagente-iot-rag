@@ -1,0 +1,14 @@
+[
+  "bytes_src",
+  "bytes_dst",
+  "pkts_src",
+  "pkts_dst",
+  "puerto_src",
+  "puerto_dst",
+  "duracion",
+  "dns_tipo",
+  "http_codigo",
+  "http_bytes_resp",
+  "estado_conn",
+  "avg_packet_size"
+]

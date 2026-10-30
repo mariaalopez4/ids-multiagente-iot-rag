@@ -1,0 +1,12 @@
+{
+  "TON_IoT": {
+    "col_label": "label",
+    "col_type": "type",
+    "fecha_aprendizaje": "2026-04-30T09:47:05.545181"
+  },
+  "Bot-IoT": {
+    "col_label": "attack",
+    "col_type": "category",
+    "fecha_aprendizaje": "2026-04-30T09:48:46.864208"
+  }
+}
